@@ -138,3 +138,23 @@ sinon:
 vagrant plugin install vagrant-vbguest
 vagrant plugin list
 ```
+
+#### Creer/Init vagrantfile:
+
+Create a base Vagrantfile:
+
+```bash
+vagrant init hashicorp/bionic64
+```
+
+Create a minimal Vagrantfile (no comments or helpers):
+
+```bash
+vagrant init -m hashicorp/bionic64
+```
+
+Create a new Vagrantfile, overwriting the one at the current path:
+
+```bash
+vagrant init -f hashicorp/bionic64
+```
