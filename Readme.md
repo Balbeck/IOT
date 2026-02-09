@@ -164,3 +164,18 @@ or simply:
 ```bash
 vagrant init
 ```
+#### Eventuel Probleme kvm est chargé et bloque VirtualBox.
+```bash
+lsmod | grep kvm
+```
+si kvm_intel ou kvm_amd apparet, il faut décharger KVM avant de lancer Vagrant (temporaire):
+```bash
+sudo modprobe -r kvm_intel
+sudo modprobe -r kvm
+```
+OU blacklister les modules kvm (Solution LT):
+```bash
+echo -e "blacklist kvm\nblacklist kvm_intel" | sudo tee /etc/modprobe.d/blacklist-kvm.conf
+```
+
+Puis relancer `vagrant up`
