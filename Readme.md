@@ -158,3 +158,9 @@ Create a new Vagrantfile, overwriting the one at the current path:
 ```bash
 vagrant init -f hashicorp/bionic64
 ```
+
+or simply:
+
+```bash
+vagrant init
+```
