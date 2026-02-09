@@ -132,3 +132,9 @@ vagrant plugin list
 ```
 
 On devrait voir `vagrant-vbguest` (ou au moins pas d’erreur).
+sinon:
+
+```bash
+vagrant plugin install vagrant-vbguest
+vagrant plugin list
+```
