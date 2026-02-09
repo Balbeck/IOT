@@ -88,3 +88,47 @@ Verification:
 ```bash
 vboxmanage --version
 ```
+
+#### Installation Vagrant
+
+Installer les dépendances nécessaires
+
+```bash
+sudo apt update
+sudo apt install -y wget gpg software-properties-common
+```
+
+Ajouter la clé GPG officielle de HashiCorp
+
+```bash
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+```
+
+Ajouter le dépôt officiel
+
+```bash
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+```
+
+Mettre à jour et installer Vagrant
+
+```bash
+sudo apt update
+sudo apt install -y vagrant
+```
+
+Verification:
+
+```bash
+vagrant --version
+```
+
+#### Vagrant a besoin d’un provider (comme VirtualBox, VMware, etc.).
+
+Pour vérifier que Vagrant détecte bien VirtualBox :
+
+```bash
+vagrant plugin list
+```
+
+On devrait voir `vagrant-vbguest` (ou au moins pas d’erreur).
