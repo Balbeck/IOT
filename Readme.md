@@ -67,13 +67,20 @@ Du coup on va installer virtualbox-7.0, les dependances et compiler les modules 
 `Le noyau 6.17 nécessite les en-têtes exacts (linux-headers-6.17.0-14-generic) pour compiler les modules VirtualBox.`
 
 ```bash
-sudo apt install -y virtualbox-7.0
+sudo apt install -y virtualbox-7.1
 ```
 
 ```bash
 sudo apt install -y build-essential dkms linux-headers-6.17.0-14-generic
 sudo /sbin/vboxconfig
 
+```
+
+(ou dynamiquement)
+
+```bash
+sudo apt install -y build-essential dkms linux-headers-$(uname -r)
+sudo /sbin/vboxconfig
 ```
 
 Verification:
