@@ -1,6 +1,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "debian/bullseye64"
+  config.vm.synced_folder "./srcs", "/home/vagrant/srcs"
 
   # - - -[Server] - - -
   config.vm.define "balbeckeS" do |server|
@@ -12,7 +13,7 @@ Vagrant.configure("2") do |config|
       vb.memory = 2048
       # vb.gui = true # Lance avec l'UI pour debugg
     end
-    server.vm.provision "shell", path: "scripts/install_K3s_controller_mode.sh"
+    server.vm.provision "shell", path: "scripts/K3s_server_controller_mode.sh"
   end
 
 

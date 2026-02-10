@@ -46,20 +46,19 @@ sudo systemctl enable docker
 sudo systemctl start docker
 
 # - [ Add vagrant User to docker group ] - avoid sudo 
-sudo usermode -aG docker $USER
+# sudo usermod -aG docker $USER
+sudo usermod -aG docker vagrant
 sudo systemctl restart docker
 
 
 # - - - [ Build Docker Image (Apps) ] - - -
+docker build -t app1 ./srcs/app1
+docker build -t app2 ./srcs/app2
+docker build -t app3 ./srcs/app3
 
+# - - - [ Appliquer Deploiement dans K3s ] - - -
+kubectl apply -f /home/vagrant/srcs/app1/deploy_app1.yaml
+kubectl apply -f /home/vagrant/srcs/app1/deploy_app2.yaml
+kubectl apply -f /home/vagrant/srcs/app1/deploy_app3.yaml
 
-
-
-
-
-
-
-
-
-
-
+kubectl apply -f /home/vagrant/ingress.yaml
