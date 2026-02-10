@@ -164,18 +164,51 @@ or simply:
 ```bash
 vagrant init
 ```
+
 #### Eventuel Probleme kvm est chargé et bloque VirtualBox.
+
 ```bash
 lsmod | grep kvm
 ```
+
 si kvm_intel ou kvm_amd apparet, il faut décharger KVM avant de lancer Vagrant (temporaire):
+
 ```bash
 sudo modprobe -r kvm_intel
 sudo modprobe -r kvm
 ```
+
 OU blacklister les modules kvm (Solution LT):
+
 ```bash
 echo -e "blacklist kvm\nblacklist kvm_intel" | sudo tee /etc/modprobe.d/blacklist-kvm.conf
 ```
 
 Puis relancer `vagrant up`
+
+#### Verifier que K3s est bien installe et fonctionnel:
+
+###### Sur Server(Master):
+
+`vagrant ssh balbeckeS` : connection ssh a la Vm Master:
+
+```bash
+sudo systemctl status k3s
+```
+
+###### Sur Agent:
+
+`vagrant ssh balbeckeSW` : connection ssh a la Vm Agent:
+
+```bash
+sudo systemctl status k3s-agent
+```
+
+###### Sur Master verifier que l'Agent est bien enregistre:
+
+`vagrant ssh balbeckeS` : connection ssh a la Vm Master:
+
+```bash
+sudo k3s kubectl get nodes
+sudo k3s kubectl get nodes -o wide
+```
