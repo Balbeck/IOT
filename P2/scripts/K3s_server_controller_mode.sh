@@ -56,6 +56,18 @@ docker build -t app1 ./srcs/app1
 docker build -t app2 ./srcs/app2
 docker build -t app3 ./srcs/app3
 
+
+# - - - [ Import Docker Image dans K3s ] - - -
+docker save app1:latest -o app1.tar
+sudo k3s ctr images import app1.tar
+
+docker save app2:latest -o app2.tar
+sudo k3s ctr images import app2.tar
+
+docker save app3:latest -o app3.tar
+sudo k3s ctr images import app3.tar
+
+
 # - - - [ Appliquer Deploiement dans K3s ] - - -
 kubectl apply -f /home/vagrant/srcs/app1/deploy_app1.yaml
 kubectl apply -f /home/vagrant/srcs/app2/deploy_app2.yaml
