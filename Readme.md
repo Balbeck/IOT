@@ -212,3 +212,19 @@ sudo systemctl status k3s-agent
 sudo k3s kubectl get nodes
 sudo k3s kubectl get nodes -o wide
 ```
+
+### Part 2: K3s and three simple applications
+First we need to edit our hosts file (Ubuntu: /etc/hosts) on the Host machine and add
+```bash
+192.168.56.110 app1.com
+192.168.56.110 app2.com
+192.168.56.110 app3.com
+```
+
+#### Check that everything is running properly 
+Firts `vagrant ssh` to connect to the vagrant Vm
+```bash
+kubectl get nodes -o wide
+kubectl get services
+kubectl get pods
+```
