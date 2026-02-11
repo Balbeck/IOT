@@ -15,7 +15,6 @@ spec:
       containers:
         - name: app3
           image: app3
-          imagePullPolicy: Never
           ports:
             - containerPort: 80
 ---
