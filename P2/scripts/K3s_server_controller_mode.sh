@@ -58,7 +58,7 @@ docker build -t app3 ./srcs/app3
 
 # - - - [ Appliquer Deploiement dans K3s ] - - -
 kubectl apply -f /home/vagrant/srcs/app1/deploy_app1.yaml
-kubectl apply -f /home/vagrant/srcs/app1/deploy_app2.yaml
-kubectl apply -f /home/vagrant/srcs/app1/deploy_app3.yaml
+kubectl apply -f /home/vagrant/srcs/app2/deploy_app2.yaml
+kubectl apply -f /home/vagrant/srcs/app3/deploy_app3.yaml
 
 kubectl apply -f /home/vagrant/ingress.yaml
