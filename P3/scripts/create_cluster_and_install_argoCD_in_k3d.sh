@@ -21,3 +21,8 @@ kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubuse
 
 # Test
 kubectl get pods -n argocd
+
+# Get ArgoCd admin password:
+kubectl get secret argocd-initial-admin-secret \
+    -n argocd \
+    -o jsonpath="{.data.password}" | base64 -d
