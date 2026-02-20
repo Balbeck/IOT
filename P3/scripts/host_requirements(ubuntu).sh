@@ -1,8 +1,6 @@
 #!/bin/bash
 
-sudo apt update && sudo apt upgrade -y
-
-# Uninstall all conflicting packages (docker recommended):
+# Uninstall all conflicting packages:
 sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
 sudo apt update && sudo apt upgrade -y
 
