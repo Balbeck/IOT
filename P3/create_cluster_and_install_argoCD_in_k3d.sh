@@ -3,7 +3,6 @@
 # Create cluster + expose ports 
 k3d cluster create iot \
     -p "80:80@loadbalancer" \
-    -p "8888:8888@loadbalancer" \
     --agents 1
 kubectl get nodes # Test
 kubectl get pods -A 
