@@ -21,34 +21,34 @@ set -e
 
 # Create Cluster
 if k3d cluster list | grep -q "iot"; then
-    echo "🚫 Cluster [ iot ] already exists!"
-    echo "🗑️ Deleting cluster [ iot ]..."
+    echo "🚫  Cluster [ iot ] already exists!"
+    echo "🗑️  Deleting cluster [ iot ]..."
     k3d cluster delete iot 2>/dev/null || true
 fi
-echo "🏗️ Creating new k3d cluster..."
+echo "🏗️  Creating new k3d cluster..."
 k3d cluster create iot -p "80:80@loadbalancer" --agents 1
 
 # Waiting for cluster to be ready before going on
-echo "⏳ Waiting for cluster to be ready..."
+echo "⏳  Waiting for cluster to be ready..."
 until kubectl get nodes >/dev/null 2>&1; do
-    echo "⏳ Waiting for K8s API..."
+    echo "⏳  Waiting for K8s API..."
     sleep 2
 done
-echo "✅️ K8s API is ready !"
+echo "✅️  K8s API is ready !"
 
-echo "⏳ Waiting for nodes to be ready..."
+echo "⏳  Waiting for nodes to be ready..."
 while [[ $(kubectl get nodes --no-headers 2>/dev/null | awk '{print $2}') != "Ready" ]]; do
-    echo "⏳ Waiting for nodes to be on Ready state..."
+    echo "⏳  Waiting for nodes to be on Ready state..."
     sleep 2
 done
-echo "✅️ Cluster [ iot ] is Ready !"
+echo "✅️  Cluster [ iot ] is Ready !"
 
 # # Or simply...
 # kubectl wait --for=condition=Ready node --all --timeout=30s
 
 
 # Create namespaces
-echo "🏗️ Creating namespaces..."
+echo "🏗️  Creating namespaces..."
 create_namespace argocd
 create_namespace dev
 
@@ -61,16 +61,29 @@ create_namespace dev
 
 
 # Install ArgoCD
-echo "🏗️ Installing ArgoCD..."
-kubectl apply -n argocd \
+echo "🏗️  Installing ArgoCD..."
+kubectl apply --server-side -n argocd \
 -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-echo "⏳ Waiting for Argo CD pods to be ready..."
-kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
-echo "✅️ Argo CD installed successfully!"
+# kubectl apply -n argocd \
+# -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-# Get ArgoCd admin password:
+echo "⏳  Waiting for Argo CD pods to be ready..."
+kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
+echo "✅️  Argo CD installed successfully!"
+
+# Get ArgoCd admin password: [user: admin]
 echo "🔑 Admin password:"
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+echo ""
 
-echo "✅️ Argo CD is accessible via port-forward or ingress."
+# Enable insecure mode (disable internal TLS) for ArgoCD
+echo "🔧 Configuring Argo CD for Ingress..."
+kubectl patch configmap argocd-cmd-params-cm -n argocd \
+    -p '{"data":{"server.insecure":"true"}}'
+
+# Restart ArgoCD server to apply config + Apply Ingress
+kubectl rollout restart deployment argocd-server -n argocd
+kubectl apply -f ./confs/argocd-ingress.yaml
+# echo "🌍 Argo CD available at: http://argocd.local"
+echo "✅️  Argo CD is accessible via Ingress at [ http://localhost:80 ]"
