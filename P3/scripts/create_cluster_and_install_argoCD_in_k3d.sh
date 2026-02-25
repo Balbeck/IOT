@@ -84,6 +84,5 @@ kubectl patch configmap argocd-cmd-params-cm -n argocd \
 
 # Restart ArgoCD server to apply config + Apply Ingress
 kubectl rollout restart deployment argocd-server -n argocd
-kubectl apply -f ./confs/argocd-ingress.yaml
-# echo "🌍 Argo CD available at: http://argocd.local"
-echo "✅️  Argo CD is accessible via Ingress at [ http://localhost:80 ]"
+kubectl apply -f ./../confs/argocd-ingress.yaml
+echo "✅️  Argo CD available at 🌍:  http://argocd.localhost "
