@@ -1,28 +1,70 @@
+# #!/bin/bash
+
+# # Create cluster + expose ports 
+# k3d cluster create iot \
+#     -p "80:80@loadbalancer" \
+#     --agents 1
+# kubectl get nodes # Test
+# kubectl get pods -A 
+
+# # Create namespace for argocd and dev env
+# kubectl create namespace argocd
+# kubectl create namespace dev
+# kubectl get ns # Test
+
+# # To install k3d we first need to create a cluster !!!
+
+
+
+# # Install argocd (with UI, SSO and multi-cluster features)
+# kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# # Test
+# kubectl get pods -n argocd
+
+# # Get ArgoCd admin password:
+# kubectl get secret argocd-initial-admin-secret \
+#     -n argocd \
+#     -o jsonpath="{.data.password}" | base64 -d
+
+
 #!/bin/bash
 
-# Create cluster + expose ports 
+set -e
+
+echo "Creating k3d cluster..."
+
 k3d cluster create iot \
     -p "80:80@loadbalancer" \
     --agents 1
-kubectl get nodes # Test
-kubectl get pods -A 
 
-# Create namespace for argocd and dev env
-kubectl create namespace argocd
-kubectl create namespace dev
-kubectl get ns # Test
+echo "Waiting for cluster to be ready..."
+sleep 10
 
-# To install k3d we first need to create a cluster !!!
+kubectl get nodes
 
+echo "Creating namespaces..."
 
+kubectl create namespace argocd || true
+kubectl create namespace dev || true
 
-# Install argocd (with UI, SSO and multi-cluster features)
-kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+echo "Installing Argo CD..."
 
-# Test
-kubectl get pods -n argocd
+kubectl apply -n argocd \
+-f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-# Get ArgoCd admin password:
+echo "Waiting for Argo CD pods to be ready..."
+
+kubectl wait --for=condition=available deployment \
+--all -n argocd --timeout=300s
+
+echo "Argo CD installed successfully!"
+
+echo "Admin password:"
+
 kubectl get secret argocd-initial-admin-secret \
-    -n argocd \
-    -o jsonpath="{.data.password}" | base64 -d
+-n argocd \
+-o jsonpath="{.data.password}" | base64 -d
+
+echo ""
+echo "Argo CD is accessible via port-forward or ingress."
