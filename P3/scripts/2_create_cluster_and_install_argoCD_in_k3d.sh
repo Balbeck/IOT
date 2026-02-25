@@ -65,17 +65,9 @@ echo "🏗️  Installing ArgoCD..."
 kubectl apply --server-side -n argocd \
 -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-# kubectl apply -n argocd \
-# -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
 echo "⏳  Waiting for Argo CD pods to be ready..."
 kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 echo "✅️  Argo CD installed successfully!"
-
-# Get ArgoCd admin password: [user: admin]
-echo "🔑 Admin password:"
-kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
-echo ""
 
 # Enable insecure mode (disable internal TLS) for ArgoCD
 echo "🔧 Configuring Argo CD for Ingress..."
@@ -86,3 +78,8 @@ kubectl patch configmap argocd-cmd-params-cm -n argocd \
 kubectl rollout restart deployment argocd-server -n argocd
 kubectl apply -f ./../confs/argocd-ingress.yaml
 echo "✅️  Argo CD available at 🌍:  http://argocd.localhost "
+
+# Get ArgoCd admin password: [user: admin]
+echo "🔑 Admin password:"
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+echo ""
