@@ -26,7 +26,8 @@ if k3d cluster list | grep -q "iot"; then
     k3d cluster delete iot 2>/dev/null || true
 fi
 echo "🏗️  Creating new k3d cluster..."
-k3d cluster create iot -p "80:80@loadbalancer" --agents 1
+# k3d cluster create iot -p "80:80@loadbalancer" --agents 1
+k3d cluster create iot -p "80:80@loadbalancer" -p "30080:30080@loadbalancer" --agents 1
 
 # Waiting for cluster to be ready before going on
 echo "⏳  Waiting for cluster to be ready..."
@@ -56,13 +57,17 @@ kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 echo "✅️  Argo CD installed successfully!"
 
 # Enable insecure mode (disable internal TLS) for ArgoCD
-echo "🔧 Configuring Argo CD for Ingress..."
+echo "🔧 Configuring Argo CD..."
 kubectl patch configmap argocd-cmd-params-cm -n argocd \
     -p '{"data":{"server.insecure":"true"}}'
 
-# Restart ArgoCD server to apply config + Apply Ingress
+# Restart ArgoCD server to apply config + Expose port 
+
+kubectl apply -f ./../confs/argocd_port_exposition.yaml
+
 kubectl rollout restart deployment argocd-server -n argocd
-kubectl apply -f ./../confs/argocd-ingress.yaml
+kubectl get pods -n argocd
+
 echo "✅️  Argo CD available at 🌍:  http://argocd.localhost "
 
 # Get ArgoCd admin password: [user: admin]
