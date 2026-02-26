@@ -30,22 +30,9 @@ k3d cluster create iot -p "80:80@loadbalancer" --agents 1
 
 # Waiting for cluster to be ready before going on
 echo "⏳  Waiting for cluster to be ready..."
-until kubectl get nodes >/dev/null 2>&1; do
-    echo "⏳  Waiting for K8s API..."
-    sleep 2
-done
+kubectl wait --for=condition=Ready node --all --timeout=120s
 echo "✅️  K8s API is ready !"
-
-echo "⏳  Waiting for nodes to be ready..."
-while [[ $(kubectl get nodes --no-headers 2>/dev/null | awk '{print $2}') != "Ready" ]]; do
-    echo "⏳  Waiting for nodes to be on Ready state..."
-    sleep 5
-done
 echo "✅️  Cluster [ iot ] is Ready !"
-
-# # Or simply...
-# kubectl wait --for=condition=Ready node --all --timeout=30s
-
 
 # Create namespaces
 echo "🏗️  Creating namespaces..."
@@ -57,8 +44,6 @@ create_namespace dev
 # kubectl wait --for=jsonpath='{.status.phase}'=Active --timeout=30s namespace argocd
 # kubectl create namespace dev 2>/dev/null || true
 # kubectl wait --for=jsonpath='{.status.phase}'=Active --timeout=30s namespace dev
-
-
 
 # Install ArgoCD
 echo "🏗️  Installing ArgoCD..."
