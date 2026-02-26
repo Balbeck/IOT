@@ -39,7 +39,7 @@ echo "✅️  K8s API is ready !"
 echo "⏳  Waiting for nodes to be ready..."
 while [[ $(kubectl get nodes --no-headers 2>/dev/null | awk '{print $2}') != "Ready" ]]; do
     echo "⏳  Waiting for nodes to be on Ready state..."
-    sleep 2
+    sleep 5
 done
 echo "✅️  Cluster [ iot ] is Ready !"
 
@@ -62,8 +62,9 @@ create_namespace dev
 
 # Install ArgoCD
 echo "🏗️  Installing ArgoCD..."
-kubectl apply --server-side -n argocd \
--f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd --server-side --force-conflicts -f \
+    https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
 
 echo "⏳  Waiting for Argo CD pods to be ready..."
 kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
