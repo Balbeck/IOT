@@ -3,7 +3,9 @@
 set -e
 
 # VARS
-ARGOCD_SERVER="localhost:30080"
+IOT_APP_PORT="30042"
+ARGOCD_EXPOSED_PORT="30021"
+ARGOCD_SERVER="localhost:$ARGOCD_EXPOSED_PORT"
 GIT_REPO="https://github.com/Balbeck/IOT.git"
 GIT_BRANCH="main"
 APP_NAME="iot-app"
@@ -49,3 +51,4 @@ argocd app create $APP_NAME \
 echo "⏳  Syncing app..."
 argocd app sync $APP_NAME
 echo "✅  App [ $APP_NAME ] is synced and will auto-deploy on each push to [ $GIT_BRANCH ]!"
+echo "reach wil42 web App at: localhost:$IOT_APP_PORT"

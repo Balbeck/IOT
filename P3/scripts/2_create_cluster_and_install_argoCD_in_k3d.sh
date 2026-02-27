@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ARGOCD_EXPOSED_PORT="30021"
+IOT_APP_PORT="30042"
+
 # Fct to create Namespace in the cluster
 create_namespace() {
     NAMESPACE=$1
@@ -27,7 +30,7 @@ if k3d cluster list | grep -q "iot"; then
 fi
 echo "🏗️  Building new k3d cluster..."
 # k3d cluster create iot -p "80:80@loadbalancer" --agents 1
-k3d cluster create iot -p "80:80@loadbalancer" -p "30080:30080@loadbalancer" --agents 1
+k3d cluster create iot -p "80:80@loadbalancer" -p "$ARGOCD_EXPOSED_PORT:$ARGOCD_EXPOSED_PORT@loadbalancer" -p "$IOT_APP_PORT:$IOT_APP_PORT@loadbalancer" --agents 1
 
 # Waiting for cluster to be ready before going on
 echo "⏳  Waiting for cluster to be ready..."
@@ -65,7 +68,7 @@ kubectl patch configmap argocd-cmd-params-cm -n argocd \
 
 # Restart ArgoCD server to apply config + Expose port
 echo "🔧 Applying ports configuration..."
-kubectl apply -f ./../confs/argocd_port_exposition.yaml
+kubectl apply -f ./../confs/argocd-service-exposure.yaml
 echo "🔧 Restarting Deployment Server ..."
 kubectl rollout restart deployment argocd-server -n argocd
 echo "⏳  Waiting for all ArgoCD pods to be Up and Running..."
@@ -83,7 +86,7 @@ rm argocd-linux-amd64
 echo "✅  ArgoCD CLI installed !"
 
 
-echo "🌍  ArgoCD's UI is available at :  http://localhost:30080 "
+echo "🌍  ArgoCD's UI is available at :  http://localhost:$ARGOCD_EXPOSED_PORT "
 # Get ArgoCd admin password: [user: admin]
 echo "🔑 with Admin password:"
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d

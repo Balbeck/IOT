@@ -8,7 +8,7 @@ spec:
     - name: http
       port: 8080
       targetPort: 8080
-      nodePort: 30080
+      nodePort: 30021
     - name: http-alt
       port: 80
       targetPort: 80
@@ -19,6 +19,25 @@ spec:
     app.kubernetes.io/name: argocd-server
   type: NodePort
 
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   # name: wil42-web-app
+#   name: iot-app
+#   namespace: dev
+# spec:
+#   type: NodePort
+#   ports:
+#     - name: web-app
+#       port: 8888              # Port listen by the app 
+#       targetPort: 8888        # internal Port in the container
+#       nodePort: 30042         # external cluster Port, The range of valid ports is 30000-32767
+#   selector:
+#     # app.kubernetes.io/name: wil42-web-app
+#     app.kubernetes.io/name: iot-app
+  
 
 # apiVersion: v1
 # kind: Service
