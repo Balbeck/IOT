@@ -3,7 +3,6 @@
 set -e
 
 # VARS
-# ARGOCD_SERVER="argocd.localhost"
 ARGOCD_SERVER="localhost:30080"
 GIT_REPO="https://github.com/Balbeck/IOT.git"
 GIT_BRANCH="main"
@@ -11,18 +10,12 @@ APP_NAME="iot-app"
 APP_NAMESPACE="dev"
 APP_PATH="P3/confs/k8s"
 
-# # Argocd CLI
-# echo "🏗️  Installing ArgoCD CLI..."
-# VERSION=$(curl -L -s https://raw.githubusercontent.com/argoproj/argo-cd/stable/VERSION)
-# curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/v$VERSION/argocd-linux-amd64
-# sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
-# rm argocd-linux-amd64
-# echo "✅  ArgoCD CLI installed !"
 
 # Logging into ArgoCD
 echo "🔐  Getting admin password..."
 ARGO_PWD=$(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d)
 # echo $ARGO_PWD
+
 
 echo "⏳  Waiting for ArgoCD server to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
