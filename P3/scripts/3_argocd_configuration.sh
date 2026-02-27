@@ -43,6 +43,7 @@ argocd app create $APP_NAME \
         --auto-prune \
         --self-heal
 
+argocd app set $APP_NAME --sync-interval 30s
 
 echo "⏳  Syncing app..."
 argocd app sync $APP_NAME
