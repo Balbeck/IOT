@@ -39,7 +39,8 @@ echo "✅️  K8s API is ready !"
 echo "✅️  Cluster [ iot ] is Ready !"
 
 # Create namespaces
-echo -e "\n🏗️  Building namespaces..."
+echo ""
+echo "🏗️  Building namespaces..."
 create_namespace argocd
 create_namespace dev
 
@@ -50,7 +51,8 @@ create_namespace dev
 # kubectl wait --for=jsonpath='{.status.phase}'=Active --timeout=30s namespace dev
 
 # Install ArgoCD
-echo -e "\n🏗️  Installing ArgoCD..."
+echo ""
+echo "🏗️  Installing ArgoCD..."
 kubectl apply -n argocd --server-side --force-conflicts -f \
     https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
@@ -78,7 +80,8 @@ echo "✅️  All the argocd pods are Up and Running!"
 
 
 # Argocd CLI
-echo -e "\n🏗️  Installing ArgoCD CLI..."
+echo ""
+echo "🏗️  Installing ArgoCD CLI..."
 VERSION=$(curl -L -s https://raw.githubusercontent.com/argoproj/argo-cd/stable/VERSION)
 curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/v$VERSION/argocd-linux-amd64
 sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd

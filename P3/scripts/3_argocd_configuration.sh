@@ -33,7 +33,8 @@ echo "✅  Succesfully connected to ArgoCD !"
 
 
 # Creating the ArgoCD App
-echo -e "\n🏗️  Creating ArgoCD App [ $APP_NAME ]..."
+echo ""
+echo "🏗️  Building ArgoCD App [ $APP_NAME ]..."
 argocd app create $APP_NAME \
         --repo $GIT_REPO \
         --path $APP_PATH \
@@ -42,8 +43,6 @@ argocd app create $APP_NAME \
         --sync-policy automated \
         --auto-prune \
         --self-heal
-
-argocd app set $APP_NAME --sync-interval 30s
 
 echo "⏳  Syncing app..."
 argocd app sync $APP_NAME
