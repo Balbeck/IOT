@@ -21,11 +21,7 @@ ARGO_PWD=$(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath=
 
 echo "⏳  Waiting for ArgoCD server to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
-until curl -s http://argocd.localhost >/dev/null 2>&1; do
-  echo "⏳  ArgoCD server not ready yet..."
-  sleep 2
-done
-echo "✅  ArgoCD server is reachable!"
+echo "✅  ArgoCD server is Ready!"
 
 
 echo "🔑  Logging into ArgoCD..."
@@ -37,7 +33,7 @@ echo "✅  Succesfully connected to ArgoCD !"
 
 
 # Creating the ArgoCD App
-echo "🏗️  Creating ArgoCD App [ $APP_NAME ]..."
+echo -e "\n🏗️  Creating ArgoCD App [ $APP_NAME ]..."
 argocd app create $APP_NAME \
         --repo $GIT_REPO \
         --path $APP_PATH \
